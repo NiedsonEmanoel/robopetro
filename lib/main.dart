@@ -1,8 +1,7 @@
 import 'package:bubble/bubble.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:http/http.dart' as http;
 
 
 Alignment childAlignment = Alignment.center;
@@ -84,6 +83,7 @@ class _MyAppState extends State<MyApp> {
         backgroundColor: Colors.pink,
       ),
       body: Container(
+        color: Colors.white,
         child: Column(
           children: <Widget>[
             Flexible(
@@ -104,18 +104,18 @@ class _MyAppState extends State<MyApp> {
                 children: <Widget>[
                   Flexible(
                       child: TextField(
-                    controller: messageInsert,
-                    decoration: InputDecoration.collapsed(
-                        hintText: "Mensagem...",
-                        hintStyle: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18.0)),
-                  )),
+                        controller: messageInsert,
+                        decoration: InputDecoration.collapsed(
+                            hintText: "Mensagem...",
+                            hintStyle: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18.0)),
+                      )),
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 4.0),
                     child: IconButton(
-                      
+
                         icon: Icon(
-                          
+
                           Icons.send,
                           size: 30.0,
                           color: Colors.pink,
