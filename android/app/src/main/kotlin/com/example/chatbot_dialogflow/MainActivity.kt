@@ -1,4 +1,4 @@
-package com.nmsoft.robopetro
+package org.nmsoft.robopetro
 
 import io.flutter.embedding.android.FlutterActivity
 

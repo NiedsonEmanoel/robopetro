@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:870045573097:android:1cbd3745d6a4554762f578",
         "android_client_info": {
-          "package_name": "com.nmsoft.robopetro"
+          "package_name": "org.nmsoft.robopetro"
         }
       },
       "oauth_client": [

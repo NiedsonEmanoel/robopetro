@@ -1,10 +1,16 @@
+import 'dart:convert';
+
 import 'package:bubble/bubble.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
 import 'package:flutter_automation/flutter_automation.dart';
 
 Alignment childAlignment = Alignment.center;
+
+final messageInsert = TextEditingController();
+List<Map> messsages = List();
 
 void main() {
   runApp(MaterialApp(
@@ -19,15 +25,26 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final InAppReview inAppReview = InAppReview.instance;
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   String data = "Nenhuma notificação";
 
   @override
   void initState() {
-    super.initState();
+
+    messsages.insert(0, {
+      "data": 0,
+      "message": "Para iniciar a conversa envie um 'Oi' abaixo"
+    });
+
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
         print('on message $message');
+        messsages.insert(0, {
+          "data": 0,
+          "message": "${message["notification"]['title']}\n\n${message["notification"]['body']}"
+        });
+
 
         setState(() {
           data = message.toString();
@@ -35,6 +52,10 @@ class _MyAppState extends State<MyApp> {
       },
       onResume: (Map<String, dynamic> message) {
         print('on resume $message');
+        messsages.insert(0, {
+          "data": 0,
+          "message": "Vi que consegui chamar sua atenção. \n\nIrei ser breve... Se quiser saber a quantidade de casos em seu bairro digite aqui o nome do mesmo, ou digite 'sintomas' que eu lhe digo os sintomas da COVID-19. \n\nPode contar comigo para o que você quiser."
+        });
 
         setState(() {
           data = message.toString();
@@ -42,6 +63,10 @@ class _MyAppState extends State<MyApp> {
       },
       onLaunch: (Map<String, dynamic> message) {
         print('on launch $message');
+        messsages.insert(0, {
+          "data": 0,
+          "message": "Vi que consegui chamar sua atenção. \n\nIrei ser breve... Se quiser saber a quantidade de casos em seu bairro digite aqui o nome do mesmo, ou digite 'sintomas' que eu lhe digo os sintomas da COVID-19. \n\nPode contar comigo para o que você quiser."
+        });
 
         setState(() {
           data = message.toString();
@@ -53,6 +78,7 @@ class _MyAppState extends State<MyApp> {
     _firebaseMessaging.getToken().then((token) {
       print(token);
     });
+    super.initState();
   }
 
   void response(query) async {
@@ -68,10 +94,12 @@ class _MyAppState extends State<MyApp> {
         "message": aiResponse.getListMessage()[0]["text"]["text"][0].toString()
       });
     });
+    if (await inAppReview.isAvailable() != null) {
+      inAppReview.requestReview();
+    }
   }
 
-  final messageInsert = TextEditingController();
-  List<Map> messsages = List();
+
 
   @override
   Widget build(BuildContext context) {
