@@ -1,16 +1,16 @@
 import 'dart:convert';
 
+import 'package:Barbearia_Modelo/appColors.dart';
 import 'package:bubble/bubble.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
-import 'package:flutter_automation/flutter_automation.dart';
 
 Alignment childAlignment = Alignment.center;
-
 final messageInsert = TextEditingController();
 List<Map> messsages = List();
+appColors colorsApp = appColors(modScreen.light);
 
 void main() {
   runApp(MaterialApp(
@@ -19,12 +19,20 @@ void main() {
   ));
 }
 
+void invertColor() {
+  if (colorsApp.isDarkSetted == true) {
+    colorsApp = appColors(modScreen.light);
+  }else {
+    colorsApp = appColors(modScreen.dark);
+  }
+}
+
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
   final InAppReview inAppReview = InAppReview.instance;
   FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
   String data = "Nenhuma notificação";
@@ -74,11 +82,39 @@ class _MyAppState extends State<MyApp> {
       },
     );
     _firebaseMessaging
-        .requestNotificationPermissions(const IosNotificationSettings(sound: true, badge: true, alert: true));
+        .requestNotificationPermissions(const IosNotificationSettings(
+          sound: true,
+          badge: true,
+          alert: true
+        ));
     _firebaseMessaging.getToken().then((token) {
       print(token);
     });
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    changeTheme();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    changeTheme();
+  }
+
+  changeTheme() {
+    var brightness = WidgetsBinding.instance.window.platformBrightness;
+    if (brightness == Brightness.dark) {
+      colorsApp = appColors(modScreen.dark);
+    }else {
+      colorsApp = appColors(modScreen.light);
+    }
+
+    setState(() {});
   }
 
   void response(query) async {
@@ -100,7 +136,6 @@ class _MyAppState extends State<MyApp> {
   }
 
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,7 +146,7 @@ class _MyAppState extends State<MyApp> {
         backgroundColor: Colors.pink,
       ),
       body: Container(
-        color: Colors.white,
+        color: colorsApp.backgroundColor,
         child: Column(
           children: <Widget>[
             Flexible(
@@ -133,10 +168,14 @@ class _MyAppState extends State<MyApp> {
                   Flexible(
                       child: TextField(
                         controller: messageInsert,
+                        style: TextStyle(
+                          color: colorsApp.textColor
+                        ),
                         decoration: InputDecoration.collapsed(
+
                             hintText: "Mensagem...",
                             hintStyle: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18.0)),
+                                fontWeight: FontWeight.bold, fontSize: 18.0, color: colorsApp.hintTextColor)),
                       )),
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 4.0),
@@ -149,6 +188,14 @@ class _MyAppState extends State<MyApp> {
                           color: Colors.pink,
                         ),
                         onPressed: () {
+                          if((messageInsert.text == "I_C") || (messageInsert.text == "INVERTER_CORES")) {
+                            messageInsert.text = "";
+                            messsages.insert(0, {
+                              "data": 0,
+                              "message": "Cores invertidas."
+                            });
+                            invertColor();
+                          }
                           if (messageInsert.text.isEmpty) {
                             print("empty message");
                             messageInsert.text = "Oi";
