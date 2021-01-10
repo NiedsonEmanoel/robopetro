@@ -300,7 +300,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
     );
   }
 
-  //for better one i have use the bubble package check out the pubspec.yaml
 
   Widget chat(String message, int data) {
     return Padding(
