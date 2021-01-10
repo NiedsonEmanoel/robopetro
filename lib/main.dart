@@ -5,18 +5,26 @@ import 'package:bubble/bubble.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 Alignment childAlignment = Alignment.center;
 final messageInsert = TextEditingController();
 List<Map> messsages = List();
 appColors colorsApp = appColors(modScreen.light);
+var postUrl = "https://fcm.googleapis.com/fcm/send";
+bool debugInAPP = false;
 
 void main() {
   runApp(MaterialApp(
     home: MyApp(),
     debugShowCheckedModeBanner: false,
   ));
+}
+
+void invertDebugAPP() {
+  debugInAPP = !debugInAPP;
 }
 
 void invertColor() {
@@ -89,6 +97,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
         ));
     _firebaseMessaging.getToken().then((token) {
       print(token);
+      _firebaseMessaging.subscribeToTopic("android");
     });
     super.initState();
     WidgetsBinding.instance.addObserver(this);
@@ -132,6 +141,48 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
     });
     if (await inAppReview.isAvailable() != null) {
       inAppReview.requestReview();
+    }
+  }
+
+
+  static Future<void> sendNotification(msg, title)async{
+    final data = {
+      "notification": {"body": "$msg", "title": "$title"},
+      "priority": "high",
+      "data": {
+        "click_action": "FLUTTER_NOTIFICATION_CLICK",
+        "id": "1",
+        "status": "done"
+      },
+      "to": "/topics/android"
+    };
+
+    final headers = {
+      'content-type': 'application/json',
+      'Authorization': 'key=AAAAypLB3-k:APA91bGaYjBvTu2xRNgiK4DtdWbgRZ_o3tFW1CERLjXnYxMO1RSHGiW6QJC77BxnDwwdkocENcPPoMATm6cMUC27uc6ndhbeWRSDTw_3TmIaeTqhJjwATdwbZwr1JBfMm0WIe_2oJS0k'
+    };
+
+
+    BaseOptions options = new BaseOptions(
+      connectTimeout: 5000,
+      receiveTimeout: 3000,
+      headers: headers,
+    );
+
+
+    try {
+      final response = await Dio(options).post(postUrl,
+          data: data);
+
+      if (response.statusCode == 200) {
+        Fluttertoast.showToast(msg: 'Notificação Enviada!');
+      } else {
+        print('notification sending failed');
+        // on failure do sth
+      }
+    }
+    catch(e){
+      print('exception $e');
     }
   }
 
@@ -188,14 +239,42 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
                           color: Colors.pink,
                         ),
                         onPressed: () {
-                          if((messageInsert.text == "I_C") || (messageInsert.text == "INVERTER_CORES")) {
-                            messageInsert.text = "";
+                          if((messageInsert.text == "DEBUG_MODE")) {
+                            messageInsert.text = "debug";
+                            if (debugInAPP == false) {
+                              messsages.insert(0, {
+                                "data": 0,
+                                "message": "OPÇÕES DE DEBUG ONLINE ATIVAS \n\n->DEBUG_MODE - Desativar o modo desenvolvedor.\n\n->I_C - Inverter o modo de visualização do app.\n\n->CASOS_ATUALIZADOS - Enviar notificação informando a atualização dos dados.\n\n->CUIDE_SE - Notificação para lembrar do uso de máscaras e álcool."
+                              });
+                              invertDebugAPP();
+                            }else {
+                              messsages.insert(0, {
+                                "data": 0,
+                                "message": "OPÇÕES DE DEBUG ONLINE DESATIVADAS"
+                              });
+                              invertDebugAPP();
+                            }
+                          }
+
+                          if((messageInsert.text == "CUIDE_SE")&&(debugInAPP == true)) {
+                            messageInsert.text = "debug";
+                            sendNotification("Você é importante e seus familiares são importantes para nós, cuidem-se e assim vamos vencer a covid.", "Cuide-se, vai passar.");
+                          }
+
+                          if((messageInsert.text == "CASOS_ATUALIZADOS")&&(debugInAPP == true)) {
+                            messageInsert.text = "debug";
+                            sendNotification("Nossa base de dados já foi sincronizada com a da Prefeitura, confira a quantidade de casos em seu bairro.", "Verifique a quantidade de casos no seu bairro.");
+                          }
+
+                          if((messageInsert.text == "I_C")&&(debugInAPP == true)) {
+                            messageInsert.text = "debug";
                             messsages.insert(0, {
                               "data": 0,
                               "message": "Cores invertidas."
                             });
                             invertColor();
                           }
+
                           if (messageInsert.text.isEmpty) {
                             print("empty message");
                             messageInsert.text = "Oi";

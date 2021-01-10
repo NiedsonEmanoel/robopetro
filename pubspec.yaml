@@ -32,6 +32,8 @@ dependencies:
   keyboard_visibility: ^0.5.6
   firebase_messaging: ^6.0.13
   flutter_automation: "^1.1.2"
+  dio: ^3.0.3
+  fluttertoast: ^7.1.6
   in_app_review: ^1.0.4
   bubble: ^1.1.9+1
   flutter_launcher_icons: "^0.6.1"
