@@ -239,18 +239,18 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
                           color: Colors.pink,
                         ),
                         onPressed: () {
-                          if((messageInsert.text == "DEBUG_MODE")) {
+                          if((messageInsert.text == "DEBUG_MODE")||(messageInsert.text == "DEV_MODE")) {
                             messageInsert.text = "debug";
                             if (debugInAPP == false) {
                               messsages.insert(0, {
                                 "data": 0,
-                                "message": "OPÇÕES DE DEBUG ONLINE ATIVAS \n\n->DEBUG_MODE - Desativar o modo desenvolvedor.\n\n->I_C - Inverter o modo de visualização do app.\n\n->CASOS_ATUALIZADOS - Enviar notificação informando a atualização dos dados.\n\n->CUIDE_SE - Notificação para lembrar do uso de máscaras e álcool."
+                                "message": "MODO DESENVOLVEDOR ATIVADO \n\n-> DEBUG_MODE ou DEV_MODE:\n-Desativar o modo desenvolvedor.\n\n-> I_C:\n-Inverter o modo de visualização do app.\n\n-> CASOS_ATUALIZADOS:\n-Enviar notificação informando a atualização dos dados.\n\n-> CUIDE_SE:\n-Notificação para lembrar do uso de máscaras e álcool."
                               });
                               invertDebugAPP();
                             }else {
                               messsages.insert(0, {
                                 "data": 0,
-                                "message": "OPÇÕES DE DEBUG ONLINE DESATIVADAS"
+                                "message": "MODO DESENVOLVEDOR DESATIVADO"
                               });
                               invertDebugAPP();
                             }
