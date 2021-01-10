@@ -244,7 +244,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
                             if (debugInAPP == false) {
                               messsages.insert(0, {
                                 "data": 0,
-                                "message": "MODO DESENVOLVEDOR ATIVADO \n\n-> DEBUG_MODE ou DEV_MODE:\n-Desativar o modo desenvolvedor.\n\n-> I_C:\n-Inverter o modo de visualização do app.\n\n-> CASOS_ATUALIZADOS:\n-Enviar notificação informando a atualização dos dados.\n\n-> CUIDE_SE:\n-Notificação para lembrar do uso de máscaras e álcool."
+                                "message": "MODO DESENVOLVEDOR ATIVADO \n\n-> DEBUG_MODE ou DEV_MODE:\n-Desativar o modo desenvolvedor.\n\n-> I_C:\n-Inverter o modo de visualização do app.\n\nNotificações:\n-> CASOS_ATUALIZADOS:\n-Enviar notificação informando a atualização dos dados.\n\n-> CUIDE_SE:\n-Notificação para lembrar do uso de máscaras e álcool."
                               });
                               invertDebugAPP();
                             }else {
@@ -258,7 +258,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
 
                           if((messageInsert.text == "CUIDE_SE")&&(debugInAPP == true)) {
                             messageInsert.text = "debug";
-                            sendNotification("Você é importante e seus familiares são importantes para nós, cuidem-se e assim vamos vencer a covid.", "Cuide-se, vai passar.");
+                            sendNotification("Você e seus familiares são importantes para nós, cuidem-se e assim vamos vencer a covid.", "Cuide-se, vai passar.");
                           }
 
                           if((messageInsert.text == "CASOS_ATUALIZADOS")&&(debugInAPP == true)) {
