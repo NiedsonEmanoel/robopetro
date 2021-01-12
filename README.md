@@ -1,6 +1,8 @@
 # Robô Petro
 > Um chatbot cívico. Somos uma plataforma de cidadania que busca colocar informações de maneira acessivel por meio de um robô em diversas redes sociais. E agora estamos disponíveis para aparelhos móveis.
 
+![](/assets/title.png)
+
 >Nosso app foi feito em flutter e utilizamos as seguintes bibliotecas:
 * bubble.dart
 * firebase_messaging.dart
@@ -9,8 +11,6 @@
 * dio.dart
 * dialogflow_v2.dart
 * fluttertoast.dart
-
-![](/assets/title.png)
 
 ## Instalação
 
@@ -34,11 +34,11 @@ _Para mais exemplos, consulte a [Wiki][wiki]._
 
 ## Configuração para Desenvolvimento
 
-Descreva como instalar todas as dependências para desenvolvimento e como rodar um test-suite automatizado de algum tipo. Se necessário, faça isso para múltiplas plataformas.
+1. Troque o arquivo `cupcakesbot-qlrcih-9c82160e9e70.json` na pasta assets pelo json do seu bot dialogFlow.
 
+2. Verifique as dependências.
 ```sh
-make install
-npm test
+flutter pub get
 ```
 
 ## Histórico de lançamentos
