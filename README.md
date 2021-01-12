@@ -58,15 +58,15 @@ flutter pub get
 
 ## Meta
 
-Seu Nome – [@SeuNome](https://twitter.com/...) – SeuEmail@exemplo.com
+Niedson Emanoel – [@niedsonemanoel](https://twitter.com/niedsonemanoel) – niedsonemanoel@gmail.com
 
 Distribuído sob a licença XYZ. Veja `LICENSE` para mais informações.
 
-[https://github.com/yourname/github-link](https://github.com/othonalberto/)
+[https://github.com/yourname/github-link](https://github.com/NiedsonEmanoel/)
 
 ## Contributing
 
-1. Faça o _fork_ do projeto (<https://github.com/yourname/yourproject/fork>)
+1. Faça o _fork_ do projeto (<https://github.com/NiedsonEmanoel/robopetro/fork>)
 2. Crie uma _branch_ para sua modificação (`git checkout -b feature/fooBar`)
 3. Faça o _commit_ (`git commit -am 'Add some fooBar'`)
 4. _Push_ (`git push origin feature/fooBar`)
@@ -77,4 +77,4 @@ Distribuído sob a licença XYZ. Veja `LICENSE` para mais informações.
 [npm-downloads]: https://img.shields.io/npm/dm/datadog-metrics.svg?style=flat-square
 [travis-image]: https://img.shields.io/travis/dbader/node-datadog-metrics/master.svg?style=flat-square
 [travis-url]: https://travis-ci.org/dbader/node-datadog-metrics
-[wiki]: https://github.com/seunome/seuprojeto/wiki
+[wiki]: https://github.com/NiedsonEmanoel/robopetro/wiki
