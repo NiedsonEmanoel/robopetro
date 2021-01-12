@@ -15,6 +15,11 @@ List<Map> messsages = List();
 appColors colorsApp = appColors(modScreen.light);
 var postUrl = "https://fcm.googleapis.com/fcm/send";
 bool debugInAPP = false;
+bool isTitle = false;
+dynamic title;
+bool isBody = false;
+dynamic body;
+int pass =0;
 
 void main() {
   runApp(MaterialApp(
@@ -223,10 +228,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
                           color: colorsApp.textColor
                         ),
                         decoration: InputDecoration.collapsed(
-
                             hintText: "Mensagem...",
                             hintStyle: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18.0, color: colorsApp.hintTextColor)),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18.0,
+                                color: colorsApp.hintTextColor
+                            )),
                       )),
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 4.0),
@@ -239,52 +246,84 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
                           color: Colors.pink,
                         ),
                         onPressed: () {
-                          if((messageInsert.text == "DEBUG_MODE")||(messageInsert.text == "DEV_MODE")) {
-                            messageInsert.text = "debug";
-                            if (debugInAPP == false) {
-                              messsages.insert(0, {
-                                "data": 0,
-                                "message": "MODO DESENVOLVEDOR ATIVADO \n\n-> DEBUG_MODE ou DEV_MODE:\n-Desativar o modo desenvolvedor.\n\n-> I_C:\n-Inverter o modo de visualização do app.\n\nNotificações:\n-> CASOS_ATUALIZADOS:\n-Enviar notificação informando a atualização dos dados.\n\n-> CUIDE_SE:\n-Notificação para lembrar do uso de máscaras e álcool."
-                              });
-                              invertDebugAPP();
-                            }else {
-                              messsages.insert(0, {
-                                "data": 0,
-                                "message": "MODO DESENVOLVEDOR DESATIVADO"
-                              });
-                              invertDebugAPP();
-                            }
-                          }
-
-                          if((messageInsert.text == "CUIDE_SE")&&(debugInAPP == true)) {
-                            messageInsert.text = "debug";
-                            sendNotification("Você e seus familiares são importantes para nós, cuidem-se e assim vamos vencer a covid.", "Cuide-se, vai passar.");
-                          }
-
-                          if((messageInsert.text == "CASOS_ATUALIZADOS")&&(debugInAPP == true)) {
-                            messageInsert.text = "debug";
-                            sendNotification("Nossa base de dados já foi sincronizada com a da Prefeitura, confira a quantidade de casos em seu bairro.", "Verifique a quantidade de casos no seu bairro.");
-                          }
-
-                          if((messageInsert.text == "I_C")&&(debugInAPP == true)) {
-                            messageInsert.text = "debug";
-                            messsages.insert(0, {
-                              "data": 0,
-                              "message": "Cores invertidas."
-                            });
-                            invertColor();
-                          }
-
                           if (messageInsert.text.isEmpty) {
                             print("empty message");
                             messageInsert.text = "Oi";
+                            pass++;
+                            pass = pass==4? 0:pass;
+                            print (pass);
+                            if(pass == 3) {
+                              Fluttertoast.showToast(msg: "Supimpa!");
+                            }
                           } else {
                             setState(() {
                               messsages.insert(0,
                                   {"data": 1, "message": messageInsert.text});
+                              if(((messageInsert.text == "DEBUG_MODE")||(messageInsert.text == "DEV_MODE"))&&(pass == 3)) {
+                                if (debugInAPP == false) {
+                                  messsages.insert(0, {
+                                    "data": 0,
+                                    "message": "MODO DESENVOLVEDOR ATIVADO \n\n"
+                                        "-> DEBUG_MODE ou DEV_MODE:\n-Desativa o modo desenvolvedor.\n\n"
+                                        "-> I_C:\n-Inverter o modo de visualização do app.\n\n"
+                                        "Notificações:\n-> ENVIAR_NOTIFICAÇÃO\n-Enviar notificação personalizada.\n\n-> CASOS_ATUALIZADOS:\n-Enviar notificação informando a atualização dos dados.\n\n"
+                                        "-> CUIDE_SE:\n-Notificação para lembrar do uso de máscaras e álcool."
+                                  });
+                                  invertDebugAPP();
+                                }else {
+                                  messsages.insert(0, {
+                                    "data": 0,
+                                    "message": "MODO DESENVOLVEDOR DESATIVADO"
+                                  });
+                                  pass = 0;
+                                  invertDebugAPP();
+                                }
+                              }
+
+                              else if((messageInsert.text == "CUIDE_SE")&&(debugInAPP == true)) {
+                                sendNotification("Você e seus familiares são importantes para nós, cuidem-se e assim vamos vencer a covid.", "Cuide-se, vai passar.");
+                              }
+
+                              else if((messageInsert.text == "CASOS_ATUALIZADOS")&&(debugInAPP == true)) {
+                                sendNotification("Nossa base de dados já foi sincronizada com a da Prefeitura, confira a quantidade de casos em seu bairro.", "Verifique a quantidade de casos no seu bairro.");
+                              }
+
+                              else if((messageInsert.text == "ENVIAR_NOTIFICAÇÃO")&&(debugInAPP == true)) {
+                                messsages.insert(0, {
+                                  "data": 0,
+                                  "message": "Digite o título:"
+                                });
+                                isTitle = true;
+                              }
+
+                              else if((isTitle == true)&&(debugInAPP == true)) {
+                                title = messageInsert.text;
+                                messsages.insert(0, {
+                                  "data": 0,
+                                  "message": "Digite o corpo:"
+                                });
+                                isTitle = false;
+                                isBody = true;
+                              }
+
+                              else if((isBody == true)&&(debugInAPP == true)) {
+                                body = messageInsert.text;
+                                sendNotification(body, title);
+                                isTitle = false;
+                                isBody = false;
+                              }
+
+                              else if((messageInsert.text == "I_C")&&(debugInAPP == true)) {
+                                messsages.insert(0, {
+                                  "data": 0,
+                                  "message": "Cores invertidas."
+                                });
+                                invertColor();
+                              }else {
+                                response(messageInsert.text);
+                              }
+                              messageInsert.clear();
                             });
-                            response(messageInsert.text);
-                            messageInsert.clear();
                           }
                         }),
                   )
