@@ -2,13 +2,13 @@
 > Um chatbot cívico. Somos uma plataforma de cidadania que busca colocar informações de maneira acessivel por meio de um robô em diversas redes sociais. E agora estamos disponíveis para aparelhos móveis.
 
 >Nosso app foi feito em flutter e utilizamos as seguintes bibliotecas:
-*bubble.dart
-*firebase_messaging.dart
-*in_app_review.dart
-*material.dart
-*dio.dart
-*dialogflow_v2.dart
-fluttertoast.dart
+* bubble.dart
+* firebase_messaging.dart
+* in_app_review.dart
+* material.dart
+* dio.dart
+* dialogflow_v2.dart
+* fluttertoast.dart
 
 ![](/assets/title.png)
 
