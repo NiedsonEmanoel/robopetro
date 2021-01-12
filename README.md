@@ -12,26 +12,6 @@
 * dialogflow_v2.dart
 * fluttertoast.dart
 
-## Instalação
-
-OS X & Linux:
-
-```sh
-npm install my-crazy-module --save
-```
-
-Windows:
-
-```sh
-edit autoexec.bat
-```
-
-## Exemplo de uso
-
-Alguns exemplos interessantes e úteis sobre como seu projeto pode ser utilizado. Adicione blocos de códigos e, se necessário, screenshots.
-
-_Para mais exemplos, consulte a [Wiki][wiki]._ 
-
 ## Configuração para Desenvolvimento
 
 1. Troque o arquivo `cupcakesbot-qlrcih-9c82160e9e70.json` na pasta assets pelo json do seu bot dialogFlow.
@@ -40,29 +20,13 @@ _Para mais exemplos, consulte a [Wiki][wiki]._
 ```sh
 flutter pub get
 ```
-
-## Histórico de lançamentos
-
-* 0.2.1
-    * MUDANÇA: Atualização de docs (código do módulo permanece inalterado)
-* 0.2.0
-    * MUDANÇA: Remove `setDefaultXYZ()`
-    * ADD: Adiciona `init()`
-* 0.1.1
-    * CONSERTADO: Crash quando chama `baz()` (Obrigado @NomeDoContribuidorGeneroso!)
-* 0.1.0
-    * O primeiro lançamento adequado
-    * MUDANÇA: Renomeia `foo()` para `bar()`
-* 0.0.1
-    * Trabalho em andamento
-
 ## Meta
 
 Niedson Emanoel – [@niedsonemanoel](https://twitter.com/niedsonemanoel) – niedsonemanoel@gmail.com
 
-Distribuído sob a licença XYZ. Veja `LICENSE` para mais informações.
+Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
 
-[https://github.com/yourname/github-link](https://github.com/NiedsonEmanoel/)
+[https://github.com/NiedsonEmanoel](https://github.com/NiedsonEmanoel/)
 
 ## Contributing
 
