@@ -1,7 +1,7 @@
 # Robô Petro
 > Um chatbot cívico. Somos uma plataforma de cidadania que busca colocar informações de maneira acessivel por meio de um robô em diversas redes sociais.
 
-![](../assets/title.png)
+![](/assets/title.png)
 
 ## Instalação
 
