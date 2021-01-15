@@ -23,7 +23,7 @@
 ```sh
 flutter pub get
 ```
-## Meta
+## Sobre o autor [META]
 
 Niedson Emanoel – [@niedsonemanoel](https://twitter.com/niedsonemanoel) – niedsonemanoel@gmail.com
 
