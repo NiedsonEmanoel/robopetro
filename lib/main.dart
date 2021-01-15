@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:crypto/crypto.dart';
 
 Alignment childAlignment = Alignment.center;
 final messageInsert = TextEditingController();
@@ -20,12 +21,19 @@ dynamic title;
 bool isBody = false;
 dynamic body;
 int pass =0;
+dynamic senha;
+bool awl = false;
+bool isMD5 = false;
 
 void main() {
   runApp(MaterialApp(
     home: MyApp(),
     debugShowCheckedModeBanner: false,
   ));
+}
+
+String textToMd5 (String text) {
+  return md5.convert(utf8.encode(text)).toString();
 }
 
 void invertDebugAPP() {
@@ -260,23 +268,46 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver{
                               messsages.insert(0,
                                   {"data": 1, "message": messageInsert.text});
                               if(((messageInsert.text == "DEBUG_MODE")||(messageInsert.text == "DEV_MODE"))&&(pass == 3)) {
+                                awl = true;
                                 if (debugInAPP == false) {
                                   messsages.insert(0, {
                                     "data": 0,
-                                    "message": "MODO DESENVOLVEDOR ATIVADO \n\n"
-                                        "-> DEBUG_MODE ou DEV_MODE:\n-Desativa o modo desenvolvedor.\n\n"
-                                        "-> I_C:\n-Inverter o modo de visualização do app.\n\n"
-                                        "Notificações:\n-> ENVIAR_NOTIFICAÇÃO\n-Enviar notificação personalizada.\n\n-> CASOS_ATUALIZADOS:\n-Enviar notificação informando a atualização dos dados.\n\n"
-                                        "-> CUIDE_SE:\n-Notificação para lembrar do uso de máscaras e álcool."
+                                    "message": "Digite a senha:"
                                   });
+                                  isMD5 = true;
+                                } else {
+                                    messsages.insert(0, {
+                                      "data": 0,
+                                      "message": "MODO DESENVOLVEDOR DESATIVADO"
+                                    });
                                   invertDebugAPP();
-                                }else {
+                                  isMD5 = false;
+                                  }
+                              }
+
+                              else if ((isMD5 == true) && (awl == true)) {
+                                senha = textToMd5(messageInsert.text);
+                                if (senha == '4e5a95862de7218e4a78651e955688f1') {
+                                  if (debugInAPP == false) {
+                                    messsages.insert(0, {
+                                      "data": 0,
+                                      "message": "MODO DESENVOLVEDOR ATIVADO \n\n"
+                                          "-> DEBUG_MODE ou DEV_MODE:\n-Desativa o modo desenvolvedor.\n\n"
+                                          "-> I_C:\n-Inverter o modo de visualização do app.\n\n"
+                                          "Notificações:\n-> ENVIAR_NOTIFICAÇÃO\n-Enviar notificação personalizada.\n\n"
+                                          "-> CASOS_ATUALIZADOS:\n-Enviar notificação informando a atualização dos dados.\n\n"
+                                          "-> CUIDE_SE:\n-Notificação para lembrar do uso de máscaras e álcool."
+                                    });
+                                    invertDebugAPP();
+                                    awl = false;
+                                  }
+                                } else {
+                                  isMD5 = false;
                                   messsages.insert(0, {
                                     "data": 0,
-                                    "message": "MODO DESENVOLVEDOR DESATIVADO"
+                                    "message": "Senha incorreta :("
                                   });
-                                  pass = 0;
-                                  invertDebugAPP();
+                                  awl = true;
                                 }
                               }
 

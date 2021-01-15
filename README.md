@@ -9,6 +9,7 @@
 * in_app_review.dart
 * material.dart
 * dio.dart
+* crypto.dart
 * dialogflow_v2.dart
 * fluttertoast.dart
 
@@ -16,7 +17,9 @@
 
 1. Troque o arquivo `cupcakesbot-qlrcih-9c82160e9e70.json` na pasta assets pelo json do seu bot dialogFlow.
 
-2. Verifique as dependências.
+2. Troque o arquivo `google-services.json` pelo arquivo gerado no seu firebase. 
+
+3. Verifique as dependências.
 ```sh
 flutter pub get
 ```
@@ -28,7 +31,7 @@ Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
 
 [https://github.com/NiedsonEmanoel](https://github.com/NiedsonEmanoel/)
 
-## Contributing
+## Contribua
 
 1. Faça o _fork_ do projeto (<https://github.com/NiedsonEmanoel/robopetro/fork>)
 2. Crie uma _branch_ para sua modificação (`git checkout -b feature/fooBar`)
