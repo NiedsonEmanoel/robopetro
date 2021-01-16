@@ -1,10 +1,13 @@
 import 'package:covid_19/widgets/counter.dart';
 import 'package:covid_19/widgets/my_header.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:web_scraper/web_scraper.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'appColors.dart';
 import 'robopetro.dart';
+import 'UIcolor.dart';
 
 
 String drop = "Petrolina";
@@ -14,8 +17,16 @@ int _recuperados=0;
 String _lastUpdate = "Aguardando...";
 final _webScraper = WebScraper('https://petrolina.pe.gov.br');
 final _endPoint = '/coronavirus';
+UIcolor ui = UIcolor(1);
+Brightness global;
+ThemeData sui = sui = ThemeData(
+    scaffoldBackgroundColor: ui.kBackgroundColor,
+    brightness: Brightness.light,
+    fontFamily: "Poppins",
+    textTheme: TextTheme(
+      body1: TextStyle(color: ui.kBodyTextColor),
+    ));
 
-bool _isBlack = false;
 Color kBackgroundColor = Color(0xFFFEFEFE); //black87
 Color kTitleTextColor = Color(0xFF303030); // branco
 Color kBodyTextColor = Color(0xFF4B4B4B); // branco
@@ -39,13 +50,13 @@ TextStyle kSubTextStyle = TextStyle(fontSize: 16, color: kTextLightColor);
 
 TextStyle kTitleTextstyle = TextStyle(
   fontSize: 18,
-  color: kTitleTextColor,
+  color: ui.kTitleTextColor,
   fontWeight: FontWeight.bold,
 );
 
 TextStyle kTitleTextstyleK = TextStyle(
   fontSize: 18,
-  color: kTitleTextColor,
+  color: ui.kTitleTextColor,
   fontWeight: FontWeight.bold,
 );
 
@@ -58,19 +69,35 @@ TextStyle kTitleTextstyleo = TextStyle(
 void main() => runApp(MyApp());
 
 void enclarecer() {
-   kBackgroundColor = Color(0xFFFEFEFE); //black87
-   kTitleTextColor = Color(0xFF303030); // branco
-   kassandra = Colors.white;
-   kBodyTextColor = Color(0xFF4B4B4B); // branco
-   cBOX = Colors.white; //preto 12
+   ui.kBackgroundColor = Color(0xFFFEFEFE); //black87
+   ui.kTitleTextColor = Color(0xFF303030); // branco
+   ui.kassandra = Colors.white;
+   ui.kBodyTextColor = Color(0xFF4B4B4B); // branco
+   ui.cBOX = Colors.white; //preto 12
+  global = Brightness.light;
+   sui = ThemeData(
+       scaffoldBackgroundColor: ui.kBackgroundColor,
+       brightness: Brightness.light,
+       fontFamily: "Poppins",
+       textTheme: TextTheme(
+         body1: TextStyle(color: ui.kBodyTextColor),
+       ));
 }
 
 void apagarAsLuzes() {
-  kBackgroundColor = Colors.black87; //black87
-  kTitleTextColor = Colors.white; // branco
-  kassandra = Colors.pinkAccent;
-  kBodyTextColor = Colors.white; // branco
-  cBOX = Colors.black12; //preto 12
+  ui.kBackgroundColor = Colors.black87; //black87
+  ui.kTitleTextColor = Colors.white; // branco
+  ui.kassandra = Colors.pinkAccent;
+  ui.kBodyTextColor = Colors.white; // branco
+  ui.cBOX = Colors.black12; //preto 12
+  global = Brightness.dark;
+  sui = ThemeData(
+      scaffoldBackgroundColor: ui.kBackgroundColor,
+      brightness: Brightness.dark,
+      fontFamily: "Poppins",
+      textTheme: TextTheme(
+        body1: TextStyle(color: ui.kBodyTextColor),
+      ));
 }
 
 class MyApp extends StatelessWidget {
@@ -79,12 +106,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Covid 19',
-      theme: ThemeData(
-          scaffoldBackgroundColor: kBackgroundColor,
-          fontFamily: "Poppins",
-          textTheme: TextTheme(
-            body1: TextStyle(color: kBodyTextColor),
-          )),
+      theme: sui,
       home: HomeScreen(),
     );
   }
@@ -159,31 +181,38 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
     changeTheme();
   }
 
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    controller.dispose();
+    super.dispose();
+    super.dispose();
+  }
 
   @override
   void didChangePlatformBrightness() {
     changeTheme();
   }
 
-  changeTheme() {
-    var brightness = WidgetsBinding.instance.window.platformBrightness;
-    print(brightness);
-    if (brightness == Brightness.light) {
-    enclarecer();
-    setState(() {});
+  Future<void> changeTheme() async{
+    print("uuu");
+    var brightness = await WidgetsBinding.instance.window.platformBrightness;
+    if ( brightness == Brightness.dark) {
+      global = Brightness.dark;
+      print(global);
+      colorsApp = appColors(modScreen.dark);
+      apagarAsLuzes();
+      setState(() {
+
+      });
     }else {
-    apagarAsLuzes(); //implementar com classe
-    setState(() {});
+      colorsApp = appColors(modScreen.light);
+      global = Brightness.light;
+      print(global);
+      enclarecer();
+      setState(() {});
     }
-
-
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    controller.dispose();
-    super.dispose();
+    setState(() {});
   }
 
   void onScroll() {
@@ -191,6 +220,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
       offset = (controller.hasClients) ? controller.offset : 0;
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -211,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
               height: 60,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: cBOX,
+                color: ui.cBOX,
                 borderRadius: BorderRadius.circular(25),
                 border: Border.all(
                   color: Color(0xFFE5E5E5),
@@ -291,7 +321,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                     padding: EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: cBOX,
+                      color: ui.cBOX,
                       boxShadow: [
                         BoxShadow(
                           offset: Offset(0, 4),
@@ -364,7 +394,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: kBackgroundColor,
+                      color: ui.kBackgroundColor,
                       boxShadow: [
                         BoxShadow(
                           offset: Offset(0, 10),

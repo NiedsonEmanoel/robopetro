@@ -9,6 +9,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dialogflow/dialogflow_v2.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:crypto/crypto.dart';
+import 'main.dart';
 
 Alignment childAlignment = Alignment.center;
 final messageInsert = TextEditingController();
@@ -54,10 +55,10 @@ class _MyAppState extends State<RoboPetro> with WidgetsBindingObserver{
 
   @override
   void initState() {
-  if(init == 0) {
-    response("Oi");
-    init++;
-  }
+    if (init == 0) {
+      response("Oi");
+      init++;
+    }
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) {
@@ -97,39 +98,15 @@ class _MyAppState extends State<RoboPetro> with WidgetsBindingObserver{
     );
     _firebaseMessaging
         .requestNotificationPermissions(const IosNotificationSettings(
-          sound: true,
-          badge: true,
-          alert: true
-        ));
+        sound: true,
+        badge: true,
+        alert: true
+    ));
     _firebaseMessaging.getToken().then((token) {
       print(token);
       _firebaseMessaging.subscribeToTopic("android");
     });
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    changeTheme();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangePlatformBrightness() {
-    changeTheme();
-  }
-
-  changeTheme() {
-    var brightness = WidgetsBinding.instance.window.platformBrightness;
-    if (brightness == Brightness.dark) {
-      colorsApp = appColors(modScreen.dark);
-    }else {
-      colorsApp = appColors(modScreen.light);
-    }
-
-    setState(() {});
   }
 
   void response(query) async {
