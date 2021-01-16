@@ -55,10 +55,7 @@ class _MyAppState extends State<RoboPetro> with WidgetsBindingObserver{
   @override
   void initState() {
   if(init == 0) {
-    messsages.insert(0, {
-      "data": 0,
-      "message": "Olá novamente :)\npara iniciar a conversa envie um 'Oi'"
-    });
+    response("Oi");
     init++;
   }
 

@@ -16,16 +16,16 @@ final _webScraper = WebScraper('https://petrolina.pe.gov.br');
 final _endPoint = '/coronavirus';
 
 bool _isBlack = false;
-dynamic kBackgroundColor = Color(0xFFFEFEFE); //black87
-dynamic kTitleTextColor = Color(0xFF303030); // branco
-dynamic kBodyTextColor = Color(0xFF4B4B4B); // branco
-dynamic cBOX = Colors.white; //preto 12
-dynamic kTextLightColor = Color(0xFF959595);
-dynamic kInfectedColor = Color(0xFFFF8748);
-dynamic kDeathColor = Color(0xFFFF4848);
-dynamic kassandra = Colors.white;
-dynamic kRecovercolor = Color(0xFF36C12C);
-dynamic kPrimaryColor = Colors.pink;
+Color kBackgroundColor = Color(0xFFFEFEFE); //black87
+Color kTitleTextColor = Color(0xFF303030); // branco
+Color kBodyTextColor = Color(0xFF4B4B4B); // branco
+Color cBOX = Colors.white; //preto 12
+Color kTextLightColor = Color(0xFF959595);
+Color kInfectedColor = Color(0xFFFF8748);
+Color kDeathColor = Color(0xFFFF4848);
+Color kassandra = Colors.white;
+Color kRecovercolor = Color(0xFF36C12C);
+Color kPrimaryColor = Colors.pink;
 final kShadowColor = Color(0xFFB7B7B7).withOpacity(.16);
 final kActiveShadowColor = Color(0xFF4056C6).withOpacity(.15);
 
@@ -170,18 +170,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
     print(brightness);
     if (brightness == Brightness.light) {
     enclarecer();
+    setState(() {});
     }else {
-    apagarAsLuzes();
+    apagarAsLuzes(); //implementar com classe
+    setState(() {});
     }
 
-    setState(() {});
+
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     controller.dispose();
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
