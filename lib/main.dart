@@ -17,11 +17,11 @@ int _recuperados=0;
 String _lastUpdate = "Aguardando...";
 final _webScraper = WebScraper('https://petrolina.pe.gov.br');
 final _endPoint = '/coronavirus';
-UIcolor ui = UIcolor(1);
+UIcolor ui = UIcolor(0);
 Brightness global;
 ThemeData sui = sui = ThemeData(
     scaffoldBackgroundColor: ui.kBackgroundColor,
-    brightness: Brightness.light,
+    brightness: Brightness.dark,
     fontFamily: "Poppins",
     textTheme: TextTheme(
       body1: TextStyle(color: ui.kBodyTextColor),
@@ -179,6 +179,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
     UpdatePetrolina();
     WidgetsBinding.instance.addObserver(this);
     changeTheme();
+    RoboPetro().createState();
   }
 
   @override
@@ -194,22 +195,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
     changeTheme();
   }
 
-  Future<void> changeTheme() async{
+  changeTheme() {
     print("uuu");
-    var brightness = await WidgetsBinding.instance.window.platformBrightness;
+    var brightness =  WidgetsBinding.instance.window.platformBrightness;
     if ( brightness == Brightness.dark) {
       global = Brightness.dark;
       print(global);
       colorsApp = appColors(modScreen.dark);
-      apagarAsLuzes();
       setState(() {
 
       });
     }else {
-      colorsApp = appColors(modScreen.light);
+      colorsApp = appColors(modScreen.dark);
       global = Brightness.light;
       print(global);
-      enclarecer();
       setState(() {});
     }
     setState(() {});
@@ -244,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                 color: ui.cBOX,
                 borderRadius: BorderRadius.circular(25),
                 border: Border.all(
-                  color: Color(0xFFE5E5E5),
+                  color: Colors.pinkAccent,
                 ),
               ),
               child: Row(
@@ -321,14 +320,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                     padding: EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: ui.cBOX,
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(0, 4),
-                          blurRadius: 30,
-                          color: kShadowColor,
-                        ),
-                      ],
+                      border: Border.all(
+                        color: Colors.pinkAccent,
+                        width: 1
+                      ),
+                      color: Color(0x36272f),
+
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

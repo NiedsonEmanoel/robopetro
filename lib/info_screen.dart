@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 import 'main.dart';
 import 'package:covid_19/widgets/my_header.dart';
 import 'package:flutter/material.dart';
@@ -66,10 +68,12 @@ class _InfoScreenState extends State<InfoScreen> {
                           title: "Dor de cabeça",
                           isActive: true,
                         ),
+                        Padding(padding: EdgeInsets.all(1)),
                         SymptomCard(
                           image: "assets/images/caugh.png",
                           title: "Tosse",
                         ),
+                        Padding(padding: EdgeInsets.all(1)),
                         SymptomCard(
                           image: "assets/images/fever.png",
                           title: "Febre",
