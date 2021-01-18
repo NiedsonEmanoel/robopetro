@@ -17,7 +17,16 @@ int _recuperados=0;
 String _lastUpdate = "Aguardando...";
 String soup = 'https://petrolina.pe.gov.br/coronavirus/coronavirus-boletins-diarios';
 
-List<Map<String, dynamic>> cidades = [{'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'},{'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}]; //0PE, 1LG
+List<Map<String, dynamic>> cidades = [
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 0 - PETROLINA
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 1 - LAGOA GRANDE
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 2 - JUAZEIRO
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 3 - SOBRADINHO
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 4 - CASA NOVA
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 5 - CURAÇÁ
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 6 - OROCÓ
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 7 - SANTA MARIA DA BOA VISTA
+  ];
 final _webScraper = WebScraper('https://petrolina.pe.gov.br');
 final _webScraperLG = WebScraper('https://covid19.lagoagrande.pe.gov.br');
 final _webScraperSHEET = WebScraper('https://docs.google.com');
@@ -171,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
       String recA = elements[0]['title'];
       recA = recA.trim();
       recA = recA.replaceAll(' / ', '/');
-      _lastUpdate = recA;
+      _lastUpdate = '$recA\nFonte: Prefeitura Municipal';
       cidades[0]['lastUpdate'] = _lastUpdate;
       print(cidades[0]['lastUpdate']);
       setState(() {});
@@ -186,17 +195,58 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
       cidades[1]['Casos'] = int.parse(elements[0]['title']);
       cidades[1]['Recuperados'] = int.parse(elements[1]['title']);
       cidades[1]['Mortes'] = int.parse(elements[3]['title']);
-      cidades[1]['lastUpdate'] = al;
+      cidades[1]['lastUpdate'] = '$al\nFonte: Prefeitura Municipal';
       setState(() {});
     }
 
-    if (await _webScraperSHEET.loadWebPage('/spreadsheets/d/e/2PACX-1vRKn9lgluP-UkeuKKvK255WM1dAZq3lYFUJ8_NhSKAkjA_ePsv5dC_lVMAM4T9a49Cw-oif_-7b9eK_/pubhtml?gid=0&single=true')) {
+    if (await _webScraperSHEET.loadWebPage('/spreadsheets/d/e/2PACX-1vTW2eWiBkBGHg2uRhpV9lmiD-dsCmvD6Q1YEZeoaVi2v2HevzE9kAs3HvVAh-VUz9VoAc451o8AlEuK/pubhtml')) {
       List<Map<String, dynamic>> elements = _webScraperSHEET.getElement('td', []);
-      elements.forEach((element)=>{
-        print(element['title']), // juazeiro
-      });
+     // JUAZEIRO
+      cidades[2]['Casos'] = int.parse(elements[0]['title']);
+      cidades[2]['Recuperados'] = 0;
+      cidades[2]['Mortes'] = int.parse(elements[1]['title']);
+      cidades[2]['lastUpdate'] = "${elements[2]['title']} pela equipe\ndo Brasil.io";
+      //JUAZEIRO
+
+      //SOBRADINHO
+      cidades[3]['Casos'] = int.parse(elements[21]['title']);
+      cidades[3]['Recuperados'] = 0;
+      cidades[3]['Mortes'] = int.parse(elements[22]['title']);
+      cidades[3]['lastUpdate'] = "${elements[23]['title']} pela equipe\ndo Brasil.io";
+      //SOBRADINHO
+
+      //CASA NOVA
+      cidades[4]['Casos'] = int.parse(elements[42]['title']);
+      cidades[4]['Recuperados'] = 0;
+      cidades[4]['Mortes'] = int.parse(elements[43]['title']);
+      cidades[4]['lastUpdate'] = "${elements[44]['title']} pela equipe\ndo Brasil.io";
+      //CASA NOVA
+
+      // CURAÇÁ
+      cidades[5]['Casos'] = int.parse(elements[63]['title']);
+      cidades[5]['Recuperados'] = 0;
+      cidades[5]['Mortes'] = int.parse(elements[64]['title']);
+      cidades[5]['lastUpdate'] = "${elements[65]['title']} pela equipe\ndo Brasil.io";
+      // CURAÇÁ
+
+      //OROCÓ
+      cidades[6]['Casos'] = int.parse(elements[84]['title']);
+      cidades[6]['Recuperados'] = 0;
+      cidades[6]['Mortes'] = int.parse(elements[85]['title']);
+      cidades[6]['lastUpdate'] = "${elements[86]['title']} pela equipe\ndo Brasil.io";
+      //OROCÓ
+
+      //S MARIA DA BOA VISTA
+      cidades[7]['Casos'] = int.parse(elements[105]['title']);
+      cidades[7]['Recuperados'] = 0;
+      cidades[7]['Mortes'] = int.parse(elements[106]['title']);
+      cidades[7]['lastUpdate'] = "${elements[107]['title']} pela equipe\ndo Brasil.io";
+      //S MARIA DA BOA VISTA
       setState(() {});
     }
+    setState(() {
+      print("Atualização completa");
+    });
   }
   final controller = ScrollController();
   double offset = 0;
@@ -289,7 +339,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                       value: drop,
                       items: [
                         'Petrolina',
-                        'Lagoa Grande'
+                        'Lagoa Grande',
+                        'Juazeiro',
+                        'Sobradinho',
+                        'Casa Nova',
+                        'Curaçá',
+                        'Orocó',
+                        'Santa Mª da Boa Vista'
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -317,6 +373,54 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                             _mortes = cidades[0]['Mortes'];
                             _lastUpdate = cidades[0]['lastUpdate'];
                             soup = 'https://petrolina.pe.gov.br/coronavirus/coronavirus-boletins-diarios';
+                          }
+
+                          if(value == 'Juazeiro') {
+                            _casos = cidades[2]['Casos'];
+                            _recuperados = cidades[2]['Recuperados'];
+                            _mortes = cidades[2]['Mortes'];
+                            _lastUpdate = cidades[2]['lastUpdate'];
+                            soup = 'https://brasil.io/home/';
+                          }
+
+                          if(value == 'Sobradinho') {
+                            _casos = cidades[3]['Casos'];
+                            _recuperados = cidades[3]['Recuperados'];
+                            _mortes = cidades[3]['Mortes'];
+                            _lastUpdate = cidades[3]['lastUpdate'];
+                            soup = 'https://brasil.io/home/';
+                          }
+
+                          if(value == 'Casa Nova') {
+                            _casos = cidades[4]['Casos'];
+                            _recuperados = cidades[4]['Recuperados'];
+                            _mortes = cidades[4]['Mortes'];
+                            _lastUpdate = cidades[4]['lastUpdate'];
+                            soup = 'https://brasil.io/home/';
+                          }
+
+                          if(value == 'Curaçá') {
+                            _casos = cidades[5]['Casos'];
+                            _recuperados = cidades[5]['Recuperados'];
+                            _mortes = cidades[5]['Mortes'];
+                            _lastUpdate = cidades[5]['lastUpdate'];
+                            soup = 'https://brasil.io/home/';
+                          }
+
+                          if(value == 'Orocó') {
+                            _casos = cidades[6]['Casos'];
+                            _recuperados = cidades[6]['Recuperados'];
+                            _mortes = cidades[6]['Mortes'];
+                            _lastUpdate = cidades[6]['lastUpdate'];
+                            soup = 'https://brasil.io/home/';
+                          }
+
+                          if(value == 'Santa Mª da Boa Vista') {
+                            _casos = cidades[7]['Casos'];
+                            _recuperados = cidades[7]['Recuperados'];
+                            _mortes = cidades[7]['Mortes'];
+                            _lastUpdate = cidades[7]['lastUpdate'];
+                            soup = 'https://brasil.io/home/';
                           }
                         });
                       },
