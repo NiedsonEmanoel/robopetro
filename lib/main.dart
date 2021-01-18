@@ -15,7 +15,12 @@ int _casos=0;
 int _mortes=0;
 int _recuperados=0;
 String _lastUpdate = "Aguardando...";
+String soup = 'https://petrolina.pe.gov.br/coronavirus/coronavirus-boletins-diarios';
+
+List<Map<String, dynamic>> cidades = [{'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'},{'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}]; //0PE, 1LG
 final _webScraper = WebScraper('https://petrolina.pe.gov.br');
+final _webScraperLG = WebScraper('https://covid19.lagoagrande.pe.gov.br');
+final _webScraperSHEET = WebScraper('https://docs.google.com');
 final _endPoint = '/coronavirus';
 UIcolor ui = UIcolor(0);
 Brightness global;
@@ -136,6 +141,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
     if (await _webScraper.loadWebPage(_endPoint)){
       List<Map<String, dynamic>> elements = _webScraper.getElement('main.coronavirus-container > section.coronaHome-boletim > div.boletimContainer > div.cards > div.groupBoletim > div.boletim.boletimRed > div.info > p', []);
       _casos = int.parse(elements[0]['title']);
+      cidades[0]['Casos'] = _casos;
       print('Casos: $_casos');
       setState(() {});
     }
@@ -144,6 +150,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
       List<Map<String, dynamic>> elements = _webScraper.getElement('main.coronavirus-container > section.coronaHome-boletim > div.boletimContainer > div.cards > div.groupBoletim > div.boletim.boletimBlack > div.info > p', []);
       _mortes = int.parse(elements[0]['title']);
       print('Mortes: $_mortes');
+      cidades[0]['Mortes'] = _mortes;
       setState(() {});
     }
 
@@ -154,6 +161,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
       recA = recA.replaceAll('Recuperados', '');
       recA = recA.trim();
       _recuperados = int.parse(recA);
+      cidades[0]['Recuperados'] = _recuperados;
       print("Recuperados: $_recuperados");
       setState(() {});
     }
@@ -164,7 +172,29 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
       recA = recA.trim();
       recA = recA.replaceAll(' / ', '/');
       _lastUpdate = recA;
-      print(_lastUpdate);
+      cidades[0]['lastUpdate'] = _lastUpdate;
+      print(cidades[0]['lastUpdate']);
+      setState(() {});
+    }
+
+    if (await _webScraperLG.loadWebPage("")) {
+      List<Map<String, dynamic>> elements = _webScraperLG.getElement('.r-counter', []);
+      List<Map<String, dynamic>> elementsH2 = _webScraperLG.getElement('h2', []);
+      String al = (elementsH2[0]['title']); //0 - casos, 1 - recuperados, 2 - ativos, 3 - mortos.
+      al = al.replaceAll('Boletim COVID19 - atualizado em ', '');
+      print(al);
+      cidades[1]['Casos'] = int.parse(elements[0]['title']);
+      cidades[1]['Recuperados'] = int.parse(elements[1]['title']);
+      cidades[1]['Mortes'] = int.parse(elements[3]['title']);
+      cidades[1]['lastUpdate'] = al;
+      setState(() {});
+    }
+
+    if (await _webScraperSHEET.loadWebPage('/spreadsheets/d/e/2PACX-1vRKn9lgluP-UkeuKKvK255WM1dAZq3lYFUJ8_NhSKAkjA_ePsv5dC_lVMAM4T9a49Cw-oif_-7b9eK_/pubhtml?gid=0&single=true')) {
+      List<Map<String, dynamic>> elements = _webScraperSHEET.getElement('td', []);
+      elements.forEach((element)=>{
+        print(element['title']), // juazeiro
+      });
       setState(() {});
     }
   }
@@ -258,7 +288,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                       icon: SvgPicture.asset("assets/icons/dropdown.svg"),
                       value: drop,
                       items: [
-                        'Petrolina'
+                        'Petrolina',
+                        'Lagoa Grande'
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -272,6 +303,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                       onChanged: (value) {
                         setState(() {
                           drop = value;
+                          if(value == 'Lagoa Grande') {
+                            _casos = cidades[1]['Casos'];
+                            _recuperados = cidades[1]['Recuperados'];
+                            _mortes = cidades[1]['Mortes'];
+                            _lastUpdate = cidades[1]['lastUpdate'];
+                            soup = 'https://covid19.lagoagrande.pe.gov.br/';
+                          }
+
+                          if(value == 'Petrolina') {
+                            _casos = cidades[0]['Casos'];
+                            _recuperados = cidades[0]['Recuperados'];
+                            _mortes = cidades[0]['Mortes'];
+                            _lastUpdate = cidades[0]['lastUpdate'];
+                            soup = 'https://petrolina.pe.gov.br/coronavirus/coronavirus-boletins-diarios';
+                          }
                         });
                       },
                     ),
@@ -304,12 +350,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                       ),
                       Spacer(),
                       GestureDetector(
-                        onTap: () {abrirUrl('https://petrolina.pe.gov.br/coronavirus/coronavirus-boletins-diarios');},
+                        onTap: () {abrirUrl(soup);},
                         child: Text(
-                          "Saiba mais",
+                          "Veja mais",
                           style: TextStyle(
                             color: kPrimaryColor,
                             fontWeight: FontWeight.w600,
+                            fontSize: 13
                           ),
                         ),
                       ),
