@@ -1,0 +1,41 @@
+var confirmados, data, mortes, stats;
+
+function call(state, city, token) {
+  BrasilIO(state, city, token);
+}
+
+function BrasilIO(state, city, token) {
+  var options = {
+  'method' : 'get',
+  'headers' : {
+    Authorization: 'Token '+token,
+  }
+};
+  var res = UrlFetchApp.fetch('https://api.brasil.io/v1/dataset/covid19/caso/data/?is_last=True&state='+state+'&city='+city, options);
+  content = res.getContentText();
+  var json = JSON.parse(content);
+  data = new Date(json.results[0].date);
+  stats = data.getDate()+"/"+(data.getUTCMonth()+1)+"/"+data.getFullYear();
+  mortes = json.results[0].deaths;
+  confirmados = json.results[0].confirmed;
+  Logger.log(json.results[0].city+' - '+json.results[0].state+'\nConfirmados: '+confirmados+'\nMortes: '+mortes+'\nData: '+stats+'\n');
+}
+
+function getConfirmados(state, city, token) {
+  call(state, city, token);
+  return confirmados;
+}
+
+function getData(state, city, token) {
+  call(state, city, token);
+  return stats;
+}
+
+function getMortos(state, city, token) {
+  call(state, city, token);
+  return mortes;
+}
+
+function on() {
+  getConfirmados('BA', 'Juazeiro', '23fddf2f920ed88d064ea3ede1774c4daf8b1223');
+}
