@@ -119,7 +119,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Covid 19',
+      title: 'Robô Petro',
       theme: sui,
       home: HomeScreen(),
     );
