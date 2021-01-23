@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:covid_19/widgets/counter.dart';
 import 'package:covid_19/widgets/my_header.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +9,7 @@ import 'package:web_scraper/web_scraper.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'appColors.dart';
+import 'no_connection.dart';
 import 'robopetro.dart';
 import 'UIcolor.dart';
 
@@ -21,11 +25,12 @@ List<Map<String, dynamic>> cidades = [
   {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 0 - PETROLINA
   {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 1 - LAGOA GRANDE
   {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 2 - JUAZEIRO
-  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 3 - SOBRADINHO
-  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 4 - CASA NOVA
-  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 5 - CURAÇÁ
-  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 6 - OROCÓ
-  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 7 - SANTA MARIA DA BOA VISTA
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 3 - ARARIPINA
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 4 - AFRANIO
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 5 - DORMENTES
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 6 - SERRA TALHADA
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 7 - CARUARU
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 8 PERNAMBUCO
   ];
 final _webScraper = WebScraper('https://petrolina.pe.gov.br');
 final _webScraperLG = WebScraper('https://covid19.lagoagrande.pe.gov.br');
@@ -141,7 +146,26 @@ abrirUrl(String url) async {
 
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
-  Future<void> UpdatePetrolina() async {
+  void Conected() async{
+    try {
+      final result = await InternetAddress.lookup('google.com').timeout(Duration(seconds: 2));
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        print('connected');
+      }
+    } on TimeoutException catch (_) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+
+            return NoConnectionScreen();
+          },
+        ),
+      );
+    }
+  }
+
+   Future<void> UpdatePetrolina() async {
     _casos??0;
     _mortes??0;
     _recuperados??0;
@@ -222,26 +246,36 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
       cidades[4]['lastUpdate'] = "${elements[44]['title']} pela equipe\ndo Brasil.io";
       //CASA NOVA
 
-      // CURAÇÁ
+      //S TALHADA
       cidades[5]['Casos'] = int.parse(elements[63]['title']);
       cidades[5]['Recuperados'] = 0;
       cidades[5]['Mortes'] = int.parse(elements[64]['title']);
       cidades[5]['lastUpdate'] = "${elements[65]['title']} pela equipe\ndo Brasil.io";
       // CURAÇÁ
 
-      //OROCÓ
+      //S TALHADA
       cidades[6]['Casos'] = int.parse(elements[84]['title']);
       cidades[6]['Recuperados'] = 0;
       cidades[6]['Mortes'] = int.parse(elements[85]['title']);
       cidades[6]['lastUpdate'] = "${elements[86]['title']} pela equipe\ndo Brasil.io";
-      //OROCÓ
+      //S TALHADA
 
-      //S MARIA DA BOA VISTA
-      cidades[7]['Casos'] = int.parse(elements[105]['title']);
+      //CARUARU
+      String a = elements[105]['title'];
+      a = a.replaceAll(".", "");
+      cidades[7]['Casos'] = int.parse(a);
       cidades[7]['Recuperados'] = 0;
       cidades[7]['Mortes'] = int.parse(elements[106]['title']);
-      cidades[7]['lastUpdate'] = "${elements[107]['title']} pela equipe\ndo Brasil.io";
-      //S MARIA DA BOA VISTA
+      cidades[7]['lastUpdate'] = "${elements[107]['title']}.\nFonte: Prefeitura Municipal.";
+      //CARUARU
+
+      //PERNAMBUCO
+      cidades[8]['Casos'] = int.parse(elements[126]['title']);
+      cidades[8]['Recuperados'] = int.parse(elements[128]['title']);
+      cidades[8]['Mortes'] = int.parse(elements[127]['title']);
+      cidades[8]['lastUpdate'] = "${elements[129]['title']} pela SDS-PE";
+      //PERNAMBUCO
+
       setState(() {});
     }
     setState(() {
@@ -256,6 +290,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
     // TODO: implement initState
     super.initState();
     controller.addListener(onScroll);
+    Conected();
     UpdatePetrolina();
     WidgetsBinding.instance.addObserver(this);
     changeTheme();
@@ -341,11 +376,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                         'Petrolina',
                         'Lagoa Grande',
                         'Juazeiro',
-                        'Sobradinho',
-                        'Casa Nova',
-                        'Curaçá',
-                        'Orocó',
-                        'Santa Mª da Boa Vista'
+                        'Araripina',
+                        'Afrânio',
+                        'Dormentes',
+                        'Serra Talhada',
+                        'Caruaru'
                       ].map<DropdownMenuItem<String>>((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -383,7 +418,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                             soup = 'https://brasil.io/home/';
                           }
 
-                          if(value == 'Sobradinho') {
+                          if(value == 'Araripina') {
                             _casos = cidades[3]['Casos'];
                             _recuperados = cidades[3]['Recuperados'];
                             _mortes = cidades[3]['Mortes'];
@@ -391,7 +426,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                             soup = 'https://brasil.io/home/';
                           }
 
-                          if(value == 'Casa Nova') {
+                          if(value == 'Afrânio') {
                             _casos = cidades[4]['Casos'];
                             _recuperados = cidades[4]['Recuperados'];
                             _mortes = cidades[4]['Mortes'];
@@ -399,7 +434,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                             soup = 'https://brasil.io/home/';
                           }
 
-                          if(value == 'Curaçá') {
+                          if(value == 'Dormentes') {
                             _casos = cidades[5]['Casos'];
                             _recuperados = cidades[5]['Recuperados'];
                             _mortes = cidades[5]['Mortes'];
@@ -407,7 +442,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                             soup = 'https://brasil.io/home/';
                           }
 
-                          if(value == 'Orocó') {
+                          if(value == 'Serra Talhada') {
                             _casos = cidades[6]['Casos'];
                             _recuperados = cidades[6]['Recuperados'];
                             _mortes = cidades[6]['Mortes'];
@@ -415,12 +450,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                             soup = 'https://brasil.io/home/';
                           }
 
-                          if(value == 'Santa Mª da Boa Vista') {
+                          if(value == 'Caruaru') {
                             _casos = cidades[7]['Casos'];
                             _recuperados = cidades[7]['Recuperados'];
                             _mortes = cidades[7]['Mortes'];
                             _lastUpdate = cidades[7]['lastUpdate'];
-                            soup = 'https://brasil.io/home/';
+                            soup = 'https://caruaru.pe.gov.br/coronavirus';
+                          }
+
+                          if(value == 'Pernambuco') {
+                            _casos = cidades[8]['Casos'];
+                            _recuperados = cidades[8]['Recuperados'];
+                            _mortes = cidades[8]['Mortes'];
+                            _lastUpdate = cidades[8]['lastUpdate'];
+                            soup = 'https://www.pecontracoronavirus.pe.gov.br/';
                           }
                         });
                       },
@@ -503,11 +546,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      Text("Verifique no seu bairro",
+                      Text("Denuncie!",
                           style: kTitleTextstyle,
                         ),
                       GestureDetector(
-                        onTap: () {abrirUrl('https://www.instagram.com/niedsonemanoel/');},
+                        onTap: () {abrirUrl('https://linktr.ee/robopetro');},
                         child: Text(
                         "Saiba mais",
                         style: TextStyle(
@@ -525,7 +568,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: "Clique no banner abaixo para acessar o Robô Petro",
+                              text: "Use o Robô Petro no banner abaixo\npara execer sua cidadania e denunciar\npessoas que estão furando a fila\nda vacinação.",
                               style: TextStyle(
                                 color: kTextLightColor,
                               ),
