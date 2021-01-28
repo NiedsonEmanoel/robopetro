@@ -22,20 +22,18 @@ String _lastUpdate = "Aguardando...";
 String soup = 'https://petrolina.pe.gov.br/coronavirus/coronavirus-boletins-diarios';
 
 List<Map<String, dynamic>> cidades = [
-  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 0 - PETROLINA
-  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 1 - LAGOA GRANDE
-  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 2 - JUAZEIRO
-  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 3 - ARARIPINA
-  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 4 - AFRANIO
-  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 5 - DORMENTES
-  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 6 - SERRA TALHADA
-  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 7 - CARUARU
-  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, // 8 PERNAMBUCO
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, //
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, //
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, //
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, //
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, //
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, //
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, //
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, //
+  {'Casos':0, 'Mortes':0, 'Recuperados':0, 'lastUpdate':'Aguardando...'}, //
   ];
-final _webScraper = WebScraper('https://petrolina.pe.gov.br');
-final _webScraperLG = WebScraper('https://covid19.lagoagrande.pe.gov.br');
+
 final _webScraperSHEET = WebScraper('https://docs.google.com');
-final _endPoint = '/coronavirus';
 UIcolor ui = UIcolor(0);
 Brightness global;
 ThemeData sui = sui = ThemeData(
@@ -171,59 +169,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
     _recuperados??0;
     _lastUpdate??"Aguardando...";
     setState(() {});
-    if (await _webScraper.loadWebPage(_endPoint)){
-      List<Map<String, dynamic>> elements = _webScraper.getElement('main.coronavirus-container > section.coronaHome-boletim > div.boletimContainer > div.cards > div.groupBoletim > div.boletim.boletimRed > div.info > p', []);
-      _casos = int.parse(elements[0]['title']);
-      cidades[0]['Casos'] = _casos;
-      print('Casos: $_casos');
-      setState(() {});
-    }
 
-    if (await _webScraper.loadWebPage(_endPoint)) {
-      List<Map<String, dynamic>> elements = _webScraper.getElement('main.coronavirus-container > section.coronaHome-boletim > div.boletimContainer > div.cards > div.groupBoletim > div.boletim.boletimBlack > div.info > p', []);
-      _mortes = int.parse(elements[0]['title']);
-      print('Mortes: $_mortes');
-      cidades[0]['Mortes'] = _mortes;
-      setState(() {});
-    }
-
-    if (await _webScraper.loadWebPage(_endPoint)) {
-      List<Map<String, dynamic>> elements = _webScraper.getElement('main.coronavirus-container > section.coronaHome-boletim > div.boletimContainer > div.cards > div.groupBoletim > div.boletim.boletimGreen', []);
-      String recA = elements[1]["title"];
-      recA = recA.replaceAll(' ', '');
-      recA = recA.replaceAll('Recuperados', '');
-      recA = recA.trim();
-      _recuperados = int.parse(recA);
-      cidades[0]['Recuperados'] = _recuperados;
-      print("Recuperados: $_recuperados");
-      setState(() {});
-    }
-
-    if (await _webScraper.loadWebPage(_endPoint)) {
-      List<Map<String, dynamic>> elements = _webScraper.getElement('main.coronavirus-container > section.coronaHome-boletim > div.boletimContainer > div.header > p', []);
-      String recA = elements[0]['title'];
-      recA = recA.trim();
-      recA = recA.replaceAll(' / ', '/');
-      _lastUpdate = '$recA\nFonte: Prefeitura Municipal';
-      cidades[0]['lastUpdate'] = _lastUpdate;
-      print(cidades[0]['lastUpdate']);
-      setState(() {});
-    }
-
-    if (await _webScraperLG.loadWebPage("")) {
-      List<Map<String, dynamic>> elements = _webScraperLG.getElement('.r-counter', []);
-      List<Map<String, dynamic>> elementsH2 = _webScraperLG.getElement('h2', []);
-      String al = (elementsH2[0]['title']); //0 - casos, 1 - recuperados, 2 - ativos, 3 - mortos.
-      al = al.replaceAll('Boletim COVID19 - atualizado em ', '');
-      print(al);
-      cidades[1]['Casos'] = int.parse(elements[0]['title']);
-      cidades[1]['Recuperados'] = int.parse(elements[1]['title']);
-      cidades[1]['Mortes'] = int.parse(elements[3]['title']);
-      cidades[1]['lastUpdate'] = '$al\nFonte: Prefeitura Municipal';
-      setState(() {});
-    }
-
-    if (await _webScraperSHEET.loadWebPage('/spreadsheets/d/e/2PACX-1vTW2eWiBkBGHg2uRhpV9lmiD-dsCmvD6Q1YEZeoaVi2v2HevzE9kAs3HvVAh-VUz9VoAc451o8AlEuK/pubhtml')) {
+    if (await _webScraperSHEET.loadWebPage('/spreadsheets/d/e/2PACX-1vTW2eWiBkBGHg2uRhpV9lmiD-dsCmvD6Q1YEZeoaVi2v2HevzE9kAs3HvVAh-VUz9VoAc451o8AlEuK/pubhtml?gid=1803427030&single=true')) {
       List<Map<String, dynamic>> elements = _webScraperSHEET.getElement('td', []);
      // JUAZEIRO
       cidades[2]['Casos'] = int.parse(elements[0]['title']);
@@ -269,15 +216,29 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
       cidades[7]['lastUpdate'] = "${elements[107]['title']}.\nFonte: Prefeitura Municipal.";
       //CARUARU
 
-      //PERNAMBUCO
-      cidades[8]['Casos'] = int.parse(elements[126]['title']);
-      cidades[8]['Recuperados'] = int.parse(elements[128]['title']);
-      cidades[8]['Mortes'] = int.parse(elements[127]['title']);
-      cidades[8]['lastUpdate'] = "${elements[129]['title']} pela SDS-PE";
-      //PERNAMBUCO
+      //PETROLINA
+      cidades[0]['Casos'] = int.parse(elements[126]['title']);
+      cidades[0]['Recuperados'] = int.parse(elements[128]['title']);
+      cidades[0]['Mortes'] = int.parse(elements[127]['title']);
+      cidades[0]['lastUpdate'] = "${elements[129]['title']} \nFonte: Prefeitura Municipal";
+      //PETROINA
 
-      setState(() {});
+      //LAGOA GRANDE
+      cidades[1]['Casos'] = int.parse(elements[147]['title']);
+      cidades[1]['Recuperados'] = int.parse(elements[149]['title']);
+      cidades[1]['Mortes'] = int.parse(elements[148]['title']);
+      cidades[1]['lastUpdate'] = '${elements[150]['title']}\nFonte: Prefeitura Municipal';
+      //LAGOA GRANDE
+
+      for(int i = 150; i <elements.length; i++) {
+        print("$i : ${elements[i]['title']}");
+      }
+      _casos = cidades[0]['Casos'];
+      _mortes = cidades[0]['Mortes'];
+      _recuperados = cidades[0]['Recuperados'];
+      _lastUpdate = cidades[0]['lastUpdate'];
     }
+
     setState(() {
       print("Atualização completa");
     });
@@ -311,18 +272,18 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
   }
 
   changeTheme() {
-    print("uuu");
     var brightness =  WidgetsBinding.instance.window.platformBrightness;
     if ( brightness == Brightness.dark) {
       global = Brightness.dark;
       print(global);
+     // apagarAsLuzes();
       colorsApp = appColors(modScreen.dark);
       setState(() {
-
       });
     }else {
       colorsApp = appColors(modScreen.dark);
       global = Brightness.light;
+    //  enclarecer();
       print(global);
       setState(() {});
     }
@@ -568,7 +529,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: "Use o Robô Petro no banner abaixo\npara execer sua cidadania e denunciar\npessoas que estão furando a fila\nda vacinação.",
+                              text: "Use o Robô Petro no banner abaixo\npara exercer sua cidadania e denunciar\npessoas que estão furando a fila\nda vacinação.",
                               style: TextStyle(
                                 color: kTextLightColor,
                               ),

@@ -57,6 +57,7 @@ class _MyAppState extends State<RoboPetro> with WidgetsBindingObserver{
   void initState() {
     if (init == 0) {
       response("Oi");
+      response("toruleu");
       init++;
     }
 
@@ -116,15 +117,13 @@ class _MyAppState extends State<RoboPetro> with WidgetsBindingObserver{
     Dialogflow dialogflow =
         Dialogflow(authGoogle: authGoogle, language: Language.english);
     AIResponse aiResponse = await dialogflow.detectIntent(query);
+    print(aiResponse.queryResult.intent.displayName);
     setState(() {
       messsages.insert(0, {
         "data": 0,
         "message": aiResponse.getListMessage()[0]["text"]["text"][0].toString()
       });
     });
-    if (await inAppReview.isAvailable() != null) {
-      inAppReview.requestReview();
-    }
   }
 
 
