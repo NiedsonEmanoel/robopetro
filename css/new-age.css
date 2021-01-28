@@ -338,6 +338,15 @@ section.contact ul.list-social {
   margin-bottom: 0;
 }
 
+  df-messenger {
+   --df-messenger-bot-message: #878fac;
+   --df-messenger-button-titlebar-color: #df9b56;
+   --df-messenger-chat-background-color: #fafafa;
+   --df-messenger-font-color: white;
+   --df-messenger-send-icon: #878fac;
+   --df-messenger-user-message: #479b3d;
+  }
+
 section.contact ul.list-social li a {
   font-size: 40px;
   line-height: 80px;
